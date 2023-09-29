@@ -1,8 +1,8 @@
-#virtual_assistant
+# virtual_assistant
 
 This is a Virtual Assistant app made with a python/django back end and bootstrap/javascript front end. Powered by OpenAI API, the assistant can answer your questions and even read your CSV spreadsheets through the help of python logic.
 
-Setup:
+# Setup:
 
 1. To use this app on your local machine, make sure you have python3 installed. Setup a virtual environment in the directory of your choice with "python3 -m venv va_venv" for example.
 
@@ -14,11 +14,11 @@ Setup:
 
 5. Finally, while in the project directory, run the app with "python manage.py runserver" and the app should be running locally on your machine. Remember to go into the "settings.py" file and remove the contents inside the brackets of ALLOWED_HOSTS = []. You should be able to find the app at "localhost:8000" afterwards.
 
-Deployment:
+# Deployment:
 
 To deploy this app serverless on AWS Lambda while serving the static files from an S3 bucket, I used zappa and django-s3-storage.
 
-Instructions:
+# Instructions:
 
 1. While virtual environment is activated and inside the project directory, run "pip install zappa".
 
@@ -37,8 +37,6 @@ YOUR_S3_BUCKET = 'virtual-assistant-static'
 STATICFILES_STORAGE = 'django_s3_storage.storage.StaticS3Storage'
 AWS_S3_BUCKET_NAME_STATIC = YOUR_S3_BUCKET
 
-# These next two lines will serve the static files directly 
-# from the s3 bucket
 AWS_S3_CUSTOM_DOMAIN = f'{YOUR_S3_BUCKET}.s3.amazonaws.com'
 
 STATIC_LOCATION = 'static'
