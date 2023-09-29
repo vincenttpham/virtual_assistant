@@ -20,6 +20,8 @@ def index(request):
             # get the prompt from the form
             prompt = request.POST.get('prompt')
             message = request.POST.get('prompt')
+            # set persistent chatbox for mobile screens
+            request.session['chatbox'] = 'showbox'
             if 'upload' in request.FILES:
                 upload = request.FILES['upload']
                 request.session['messages'].append({"role": "user", "content": upload.name})
@@ -31,6 +33,7 @@ def index(request):
                         'messages': request.session['messages'],
                         'prompt': '',
                         'temperature': 1,
+                        'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
                 if not upload.name.endswith('.csv'):
@@ -40,6 +43,7 @@ def index(request):
                         'messages': request.session['messages'],
                         'prompt': '',
                         'temperature': 1,
+                        'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
                 #if file is too large, return
@@ -50,6 +54,7 @@ def index(request):
                         'messages': request.session['messages'],
                         'prompt': '',
                         'temperature': 1,
+                        'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
                 
@@ -95,6 +100,7 @@ def index(request):
                 'messages': request.session['messages'],
                 'prompt': '',
                 'temperature': temperature,
+                'showbox': request.session['chatbox'],
             }
             return render(request, 'index.html', context)
         else:
@@ -114,6 +120,7 @@ def new_chat(request):
     # clear the messages list
     request.session.pop('messages', None)
     request.session.pop('prompts', None)
+    request.session.pop('chatbox', None)
     return redirect('index')
 
 def error_handler(request):
