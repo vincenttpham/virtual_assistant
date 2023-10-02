@@ -34,17 +34,6 @@ def index(request):
                 # app user will see the file name instead of its data
                 request.session['messages'].append({"role": "user", "content": upload.name})
                 request.session.modified = True
-                # if upload has no prompt, return message
-                if prompt == '':
-                    request.session['messages'].append({"role": "assistant", "content": "If you send me a file without telling me what to do with it, how am I supposed to help you?"})
-                    request.session.modified = True
-                    context = {
-                        'messages': request.session['messages'],
-                        'prompt': '',
-                        'temperature': 1,
-                        'showbox': request.session['chatbox'],
-                    }
-                    return render(request, 'index.html', context)
                 # if uploaded file isnt csv, return message
                 if not upload.name.endswith('.csv'):
                     request.session['messages'].append({"role": "assistant", "content": "Sorry, I'm only programmed to read CSV files at the moment. Try sending me a CSV file and I'll try my best to assist you."})
@@ -52,7 +41,7 @@ def index(request):
                     context = {
                         'messages': request.session['messages'],
                         'prompt': '',
-                        'temperature': 1,
+                        'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
@@ -63,12 +52,12 @@ def index(request):
                     context = {
                         'messages': request.session['messages'],
                         'prompt': '',
-                        'temperature': 1,
+                        'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
-                
-                file_data = upload.read().decode("utf-8")
+
+                file_data = upload.read().decode("unicode_escape")
 
                 lines = file_data.split("\n")
                 next(iter(lines))
@@ -94,7 +83,7 @@ def index(request):
             request.session.modified = True
             # call the OpenAI API
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+                model="gpt-3.5-turbo-16k",
                 messages=request.session['prompts'],
                 temperature=temperature,
                 max_tokens=1000,
@@ -120,7 +109,7 @@ def index(request):
             context = {
                 'messages': request.session['messages'],
                 'prompt': '',
-                'temperature': 1,
+                'temperature': 0,
             }
             return render(request, 'index.html', context)
     except Exception as e:
@@ -130,7 +119,7 @@ def index(request):
         context = {
                 'messages': request.session['messages'],
                 'prompt': '',
-                'temperature': 1,
+                'temperature': 0,
             }
         return render(request, 'index.html', context)
 
