@@ -125,8 +125,14 @@ def index(request):
             return render(request, 'index.html', context)
     except Exception as e:
         print(e)
-        # if there is an error, redirect to the error handler
-        return redirect('error_handler')
+        request.session['messages'].append({"role": "assistant", "content": str(e)})
+        # if there is an error, return error message
+        context = {
+                'messages': request.session['messages'],
+                'prompt': '',
+                'temperature': 1,
+            }
+        return render(request, 'index.html', context)
 
 def new_chat(request):
     # clear the messages list
@@ -134,6 +140,3 @@ def new_chat(request):
     request.session.pop('prompts', None)
     request.session.pop('chatbox', None)
     return redirect('index')
-
-def error_handler(request):
-    return render(request, '404.html')
