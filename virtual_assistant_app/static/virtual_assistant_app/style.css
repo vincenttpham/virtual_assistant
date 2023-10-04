@@ -737,7 +737,6 @@ button:focus {
 }
 
 .loadingDots {
-    margin: 20%;
     position: relative;
     background-color: #E6E7ED;
     border-radius: 40px;
