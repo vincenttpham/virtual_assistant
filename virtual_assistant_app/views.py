@@ -40,7 +40,6 @@ def index(request):
                     request.session.modified = True
                     context = {
                         'messages': request.session['messages'],
-                        'prompt': '',
                         'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
@@ -51,7 +50,6 @@ def index(request):
                     request.session.modified = True
                     context = {
                         'messages': request.session['messages'],
-                        'prompt': '',
                         'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
@@ -66,10 +64,13 @@ def index(request):
                 prompt += "\n"
                 upload_content = ""
                 for line in lines:
+                    upload_content += str(f"{line}")
+                    """
                     fields = line.split(",")
                     for field in fields:
                         upload_content += str(f"{field}")
                     upload_content += "\n"
+                    """
                 prompt += f"###\n{upload_content}\n###"
 
             # if temperature is used, get the temperature from the form
@@ -99,7 +100,6 @@ def index(request):
             # redirect to the home page with new messages displayed
             context = {
                 'messages': request.session['messages'],
-                'prompt': '',
                 'temperature': temperature,
                 'showbox': request.session['chatbox'],
             }
@@ -108,7 +108,6 @@ def index(request):
             # if the request is not a POST request, render the home page
             context = {
                 'messages': request.session['messages'],
-                'prompt': '',
                 'temperature': 0,
             }
             return render(request, 'index.html', context)
@@ -118,7 +117,6 @@ def index(request):
         # if there is an error, return error message
         context = {
                 'messages': request.session['messages'],
-                'prompt': '',
                 'temperature': 0,
             }
         return render(request, 'index.html', context)

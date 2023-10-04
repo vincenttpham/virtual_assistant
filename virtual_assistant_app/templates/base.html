@@ -19,8 +19,19 @@
 
     {% block content %}
     {% endblock %}
+
+    <!-- Maintain chatbox bottom scroll -->
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".modal-body").scrollTop($(".msg-body")[0].scrollHeight);
+        });
+
+    </script>
     
-    <script>
+    <!-- Persistent chatbox for mobile screens -->
+    <script type="text/javascript">
+
         jQuery(document).ready(function() {
 
             $(".chat-list a").click(function() {
@@ -34,6 +45,48 @@
 
 
         });
+
     </script>
+
+    <!-- Responsive chat bubbles -->
+    <script type="text/javascript">
+
+        jQuery("form").submit(function() {
+
+            var str = $("#prompt").val();
+
+            $("#reply p").text(str);
+            $("#reply p").addClass('bounce');
+            $("#reply").removeClass('d-none');
+
+            $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
+
+            $(".typing").addClass('bounce');
+
+            setTimeout(function() {
+                $(".typing").removeClass('d-none');
+                $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
+            }, 500);
+
+            setTimeout(function() {
+                $("#formFile").attr("disabled", true);
+                $("#prompt").attr("disabled", true);
+                $("#btnSubmit").attr("disabled", true);
+            }, 250);
+
+        });
+        
+    </script>
+
+    <!-- Responsive AI chat bubble -->
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".sender p").last().addClass('bounce');
+            $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
+        });
+
+    </script>
+
 </body>
 </html>

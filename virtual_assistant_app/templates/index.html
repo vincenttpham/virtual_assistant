@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %} Home {% endblock %}
 {% block content %}
 
@@ -142,6 +143,7 @@
 
                 <div class="modal-body">
                   <div class="msg-body">
+
                     <ul>
                       {% for message in messages %}
                       {% if message.role == 'user' %}
@@ -156,8 +158,19 @@
                       </li>
                       {% endif %}
                       {% endfor %}
-
+                      <li class="reply d-none" id="reply">
+                        <p></p>
+                        <span class="time"></span>
+                      </li>
+                      <li class="typing w-25 d-none">
+                        <span class="loadingDots">
+                          <span class="dot1"></span>
+                          <span class="dot2"></span>
+                          <span class="dot3"></span>
+                        </span>
+                      </li>
                     </ul>
+
                   </div>
                 </div>
 
@@ -172,13 +185,13 @@
                     </div>
 
                     <div class="mb-2">
-                      <input type="text" name="prompt" value="{{ prompt }}" class="form-control w-100" aria-label="message…" placeholder="Write message…">
+                      <input type="text" name="prompt" class="form-control w-100" aria-label="message…" placeholder="Write message…" id="prompt">
                     </div>
                     <div class="mb-2">
                       <input class="form-control w-100" type="hidden" step="0.01" min="0" max="2" name="temperature" value="{{ temperature }}" id="temperature">
                     </div>
                     <div class="">
-                      <button type="submit" class="form-control btn-primary w-100"><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
+                      <button type="submit" class="form-control btn-primary w-100" id="btnSubmit"><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
                     </div>
                     
                   </form>
