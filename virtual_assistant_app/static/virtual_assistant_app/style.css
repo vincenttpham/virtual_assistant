@@ -748,25 +748,25 @@ button:focus {
 }
 
 .loadingDots:after, .loadingDots:before {
-   content: '';
-   position: absolute;
-   bottom: -5px;
-   left: -2px;
-   height: 20px;
-   width: 20px;
-   border-radius: 50%;
-   background-color: #E6E7ED;
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: -2px;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: #E6E7ED;
 }
 
 .loadingDots:before {
     bottom: -15px;
-     height: 10px;
-     width: 10px;
-     left: -7px;
+    height: 10px;
+    width: 10px;
+    left: -7px;
 }
 
 .dot1, .dot2, .dot3 {
-    margin:auto 2px;
+    margin: auto 2px;
     background-color: #9E9EA1;
     height: 15px;
     width: 15px;
@@ -843,11 +843,11 @@ button:focus {
     .msg-body ul li.sender p {
         font-size: 13px;
         padding: 8px;
-        border-radius: 10px;
+        border-radius: 23px;
     }
     .msg-body ul li.reply p {
         font-size: 13px;
         padding: 8px;
-        border-radius: 10px;
+        border-radius: 23px;
     }
 }
