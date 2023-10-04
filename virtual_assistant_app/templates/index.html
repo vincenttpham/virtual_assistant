@@ -147,19 +147,19 @@
                     <ul>
                       {% for message in messages %}
                       {% if message.role == 'user' %}
-                      <li class="reply">
-                        <p> {{ message.content|linebreaksbr }} </p>
+                      <li class="reply ps-5">
+                        <p class="ms-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
                       {% elif message.role == 'assistant' %}
-                      <li class="sender">
-                        <p> {{ message.content|linebreaksbr }} </p>
+                      <li class="sender pe-5">
+                        <p class="me-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
                       {% endif %}
                       {% endfor %}
-                      <li class="reply d-none" id="reply">
-                        <p></p>
+                      <li class="reply ps-5 d-none" id="reply">
+                        <p class="ms-5"></p>
                         <span class="time"></span>
                       </li>
                       <li class="typing w-25 d-none">
@@ -177,7 +177,7 @@
 
                 <div class="send-box">
 
-                  <form action="/dev" method="POST" enctype="multipart/form-data" class="d-block">
+                  <form action="/" method="POST" enctype="multipart/form-data" class="d-block">
                     {% csrf_token %}
 
                     <div class="mb-2">

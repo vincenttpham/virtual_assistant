@@ -843,15 +843,11 @@ button:focus {
     .msg-body ul li.sender p {
         font-size: 13px;
         padding: 8px;
-        border-bottom-left-radius: 6px;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
+        border-radius: 10px;
     }
     .msg-body ul li.reply p {
         font-size: 13px;
         padding: 8px;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
-        border-bottom-left-radius: 6px;
+        border-radius: 10px;
     }
 }
