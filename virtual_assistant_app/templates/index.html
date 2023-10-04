@@ -21,7 +21,7 @@
                 <div class="chat-header">
 
                   <div class="msg-search">
-                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Search" aria-label="search">
+                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Search" aria-label="search" disabled>
                     <a class="add" href="#"><img class="img-fluid" src="https://mehedihtml.com/chatbox/assets/img/add.svg" alt="add"></a>
                   </div>
 
@@ -162,12 +162,12 @@
                         <p class="ms-5"></p>
                         <span class="time"></span>
                       </li>
-                      <li class="typing w-25 d-none">
-                        <span class="loadingDots">
+                      <li class="typing d-none">
+                        <div class="loadingDots">
                           <span class="dot1"></span>
                           <span class="dot2"></span>
                           <span class="dot3"></span>
-                        </span>
+                        </div>
                       </li>
                     </ul>
 
@@ -180,18 +180,28 @@
                   <form action="/dev" method="POST" enctype="multipart/form-data" class="d-block">
                     {% csrf_token %}
 
-                    <div class="mb-2">
-                      <input class="form-control w-100" type="file" id="formFile" name="upload">
+                    <div class="row">
+
+                      <div class="mb-2">
+                        <input type="text" name="prompt" class="form-control w-100" aria-label="message…" placeholder="Write message…" id="prompt" tabindex="1">
+                      </div>
+
+                      <div class="mb-2">
+                        <input class="form-control w-100" type="hidden" step="0.01" min="0" max="2" name="temperature" value="{{ temperature }}" id="temperature">
+                      </div>
+
                     </div>
 
-                    <div class="mb-2">
-                      <input type="text" name="prompt" class="form-control w-100" aria-label="message…" placeholder="Write message…" id="prompt">
-                    </div>
-                    <div class="mb-2">
-                      <input class="form-control w-100" type="hidden" step="0.01" min="0" max="2" name="temperature" value="{{ temperature }}" id="temperature">
-                    </div>
-                    <div class="">
-                      <button type="submit" class="form-control btn-primary w-100" id="btnSubmit"><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
+                    <div class="row">
+
+                      <div class="col-lg-6 col-md-12">
+                        <input class="form-control w-100" type="file" id="formFile" name="upload" tabindex="2">
+                      </div>
+
+                      <div class="col-lg-6 col-md-12">
+                        <button type="submit" class="form-control btn-primary w-100" id="btnSubmit" tabindex="3"><i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
+                      </div>
+
                     </div>
                     
                   </form>

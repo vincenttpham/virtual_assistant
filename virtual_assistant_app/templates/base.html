@@ -28,30 +28,11 @@
         });
 
     </script>
-    
-    <!-- Persistent chatbox for mobile screens -->
-    <script type="text/javascript">
-
-        jQuery(document).ready(function() {
-
-            $(".chat-list a").click(function() {
-                $(".chatbox").addClass('showbox');
-                return false;
-            });
-
-            $(".chat-icon").click(function() {
-                $(".chatbox").removeClass('showbox');
-            });
-
-
-        });
-
-    </script>
 
     <!-- Responsive chat bubbles -->
     <script type="text/javascript">
 
-        jQuery("form").submit(function() {
+        $("form").submit(function() {
 
             var str = $("#prompt").val();
 
@@ -66,13 +47,13 @@
             setTimeout(function() {
                 $(".typing").removeClass('d-none');
                 $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
-            }, 500);
+            }, 1000);
 
             setTimeout(function() {
                 $("#formFile").attr("disabled", true);
                 $("#prompt").attr("disabled", true);
                 $("#btnSubmit").attr("disabled", true);
-            }, 250);
+            }, 1);
 
         });
         
@@ -84,6 +65,23 @@
         $(document).ready(function () {
             $(".sender p").last().addClass('bounce');
             $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
+        });
+
+    </script>
+    
+    <!-- Persistent chatbox for mobile screens -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $(".chat-list a").click(function() {
+                $(".chatbox").addClass('showbox');
+            });
+
+            $(".chat-icon").click(function() {
+                $(".chatbox").removeClass('showbox');
+            });
+
         });
 
     </script>

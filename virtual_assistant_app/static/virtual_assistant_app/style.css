@@ -441,7 +441,7 @@ a.add img {
     font-size: 14px;
     line-height: 1.5;
     font-weight: 400;
-    padding: 15px;
+    padding: 14px;
     background: #E6E7ED;
     display: inline-block;
     border-radius: 25px;
@@ -485,7 +485,7 @@ a.add img {
     font-size: 14px;
     line-height: 1.5;
     font-weight: 400;
-    padding: 15px;
+    padding: 14px;
     background: #4b7bec;
     display: inline-block;
     border-radius: 25px;
@@ -842,12 +842,12 @@ button:focus {
     }
     .msg-body ul li.sender p {
         font-size: 13px;
-        padding: 8px;
+        padding: 13px;
         border-radius: 23px;
     }
     .msg-body ul li.reply p {
         font-size: 13px;
-        padding: 8px;
+        padding: 13px;
         border-radius: 23px;
     }
 }
