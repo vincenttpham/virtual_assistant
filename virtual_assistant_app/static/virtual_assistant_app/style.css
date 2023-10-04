@@ -424,16 +424,16 @@ a.add img {
     clear: both;
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: 0px;
     left: -3px;
     width: 0;
     height: 0;
     border-style: solid;
     border-width: 0 12px 15px 12px;
     border-color: transparent transparent #E6E7ED transparent;
-    -webkit-transform: rotate(-37deg);
-    -ms-transform: rotate(-37deg);
-    transform: rotate(-37deg);
+    -webkit-transform: rotate(-25deg);
+    -ms-transform: rotate(-25deg);
+    transform: rotate(-25deg);
 }
 
 .msg-body ul li.sender p {
@@ -444,7 +444,7 @@ a.add img {
     padding: 15px;
     background: #E6E7ED;
     display: inline-block;
-    border-radius: 10px;
+    border-radius: 25px;
     margin-bottom: 0;
 }
 
@@ -468,16 +468,16 @@ a.add img {
     clear: both;
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: 0px;
     right: -3px;
     width: 0;
     height: 0;
     border-style: solid;
     border-width: 0 12px 15px 12px;
     border-color: transparent transparent #4b7bec transparent;
-    -webkit-transform: rotate(37deg);
-    -ms-transform: rotate(37deg);
-    transform: rotate(37deg);
+    -webkit-transform: rotate(25deg);
+    -ms-transform: rotate(25deg);
+    transform: rotate(25deg);
 }
 
 .msg-body ul li.reply p {
@@ -488,7 +488,7 @@ a.add img {
     padding: 15px;
     background: #4b7bec;
     display: inline-block;
-    border-radius: 10px;
+    border-radius: 25px;
     margin-bottom: 0;
 }
 
