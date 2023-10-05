@@ -410,31 +410,16 @@ a.add img {
 
 .msg-body ul li {
     list-style: none;
-    margin: 15px 0;
-}
-
-.msg-body ul li.sender {
     display: block;
     width: 100%;
     position: relative;
 }
 
-.msg-body ul li.sender:before {
-    display: block;
-    clear: both;
-    content: '';
-    position: absolute;
-    bottom: 0px;
-    left: -3px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 12px 15px 12px;
-    border-color: transparent transparent #E6E7ED transparent;
-    -webkit-transform: rotate(-25deg);
-    -ms-transform: rotate(-25deg);
-    transform: rotate(-25deg);
+.msg-body ul li.reply {
+    text-align: right;
 }
+
+/* Sender Chat Bubble */
 
 .msg-body ul li.sender p {
     color: #000;
@@ -448,6 +433,25 @@ a.add img {
     margin-bottom: 0;
 }
 
+.msg-body ul li.sender p:before {
+    display: block;
+    clear: both;
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: -3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 12px 15px 12px;
+    border-color: transparent transparent #E6E7ED transparent;
+    -webkit-transform: rotate(-10deg);
+    -ms-transform: rotate(-10deg);
+    transform: rotate(-10deg);
+}
+
+/* Sender Chat Bubble End */
+
 .msg-body ul li.sender p b {
     display: block;
     color: #180660;
@@ -456,29 +460,7 @@ a.add img {
     font-weight: 500;
 }
 
-.msg-body ul li.reply {
-    display: block;
-    width: 100%;
-    text-align: right;
-    position: relative;
-}
-
-.msg-body ul li.reply:before {
-    display: block;
-    clear: both;
-    content: '';
-    position: absolute;
-    bottom: 0px;
-    right: -3px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 12px 15px 12px;
-    border-color: transparent transparent #4b7bec transparent;
-    -webkit-transform: rotate(25deg);
-    -ms-transform: rotate(25deg);
-    transform: rotate(25deg);
-}
+/* Reply Chat Bubble */
 
 .msg-body ul li.reply p {
     color: #fff;
@@ -491,6 +473,25 @@ a.add img {
     border-radius: 25px;
     margin-bottom: 0;
 }
+
+.msg-body ul li.reply p:before {
+    display: block;
+    clear: both;
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: -3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 12px 15px 12px;
+    border-color: transparent transparent #4b7bec transparent;
+    -webkit-transform: rotate(10deg);
+    -ms-transform: rotate(10deg);
+    transform: rotate(10deg);
+}
+
+/* Reply Chat Bubble End */
 
 .msg-body ul li.reply p b {
     display: block;
@@ -705,7 +706,7 @@ button:focus {
       transform: scale(0);
     }
     50% {
-      transform: scale(1.25);
+      transform: scale(1.1);
     }
     100% {
       transform: scale(1);
@@ -713,7 +714,7 @@ button:focus {
 }
 
 .bounce {
-    transform-origin: 0% 100%;
+    transform-origin: bottom;
     transform: scale(0);
     -webkit-animation: expand-bounce 0.5s ease-in forwards;
     -moz-animation: expand-bounce 0.5s ease-in forwards;

@@ -144,25 +144,25 @@
                 <div class="modal-body">
                   <div class="msg-body">
 
-                    <ul>
+                    <ul class="px-3 pt-1">
                       {% for message in messages %}
-                      {% if message.role == 'user' %}
-                      <li class="reply ps-5">
-                        <p class="ms-5">{{ message.content|linebreaksbr }}</p>
+                      {% if message.role == 'assistant' %}
+                      <li class="sender mt-2">
+                        <p class="me-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
-                      {% elif message.role == 'assistant' %}
-                      <li class="sender pe-5">
-                        <p class="me-5">{{ message.content|linebreaksbr }}</p>
+                      {% elif message.role == 'user' %}
+                      <li class="reply mt-2">
+                        <p class="ms-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
                       {% endif %}
                       {% endfor %}
-                      <li class="reply ps-5 d-none" id="reply">
+                      <li class="reply mt-2 d-none" id="reply">
                         <p class="ms-5"></p>
-                        <span class="time"></span>
+                        <span class="time mt-2 me-1">Delivered</span>
                       </li>
-                      <li class="typing d-none">
+                      <li class="typing mt-2 pb-3 d-none">
                         <div class="loadingDots">
                           <span class="dot1"></span>
                           <span class="dot2"></span>
@@ -177,7 +177,7 @@
 
                 <div class="send-box">
 
-                  <form action="/dev" method="POST" enctype="multipart/form-data" class="d-block">
+                  <form action="/" method="POST" enctype="multipart/form-data" class="d-block">
                     {% csrf_token %}
 
                     <div class="row">

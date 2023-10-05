@@ -24,7 +24,11 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            // Animate most recent AI chat
+            $(".sender p").last().addClass('bounce');
+
             $(".modal-body").scrollTop($(".msg-body")[0].scrollHeight);
+
         });
 
     </script>
@@ -42,8 +46,7 @@
 
             $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
 
-            $(".typing").addClass('bounce');
-
+            $(".loadingDots").addClass('bounce');
             setTimeout(function() {
                 $(".typing").removeClass('d-none');
                 $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
@@ -57,16 +60,6 @@
 
         });
         
-    </script>
-
-    <!-- Responsive AI chat bubble -->
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-            $(".sender p").last().addClass('bounce');
-            $(".modal-body").animate({ scrollTop: $(".msg-body")[0].scrollHeight });
-        });
-
     </script>
     
     <!-- Persistent chatbox for mobile screens -->
