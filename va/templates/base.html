@@ -26,6 +26,7 @@
         $(document).ready(function () {
             // Animate most recent AI chat
             $(".sender p").last().addClass('bounce');
+            $(".sender").last().removeClass('d-none');
 
             $(".modal-body").scrollTop($(".msg-body")[0].scrollHeight);
 

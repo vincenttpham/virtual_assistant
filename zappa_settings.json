@@ -1,11 +1,11 @@
 {
     "dev": {
-        "aws_region": "us-east-1",
-        "slim_handler": true,
         "django_settings": "virtual_assistant.settings",
         "profile_name": "default",
         "project_name": "virtual-assista",
-        "runtime": "python3.7",
-        "s3_bucket": "zappa-qt2aas0oz"
+        "runtime": "python3.11",
+        "s3_bucket": "zappa-8fqpanhtv",
+        "aws_region": "us-east-1",
+        "slim_handler": true
     }
 }

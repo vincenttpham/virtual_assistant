@@ -147,7 +147,7 @@
                     <ul class="px-3 pt-1">
                       {% for message in messages %}
                       {% if message.role == 'assistant' %}
-                      <li class="sender mt-2">
+                      <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
                         <p class="me-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
@@ -177,7 +177,7 @@
 
                 <div class="send-box">
 
-                  <form action="/" method="POST" enctype="multipart/form-data" class="d-block">
+                  <form action="/dev" method="POST" enctype="multipart/form-data" class="d-block">
                     {% csrf_token %}
 
                     <div class="row">

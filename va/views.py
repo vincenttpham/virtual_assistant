@@ -3,7 +3,6 @@ import openai
 from .secret_key import API_KEY
 openai.api_key = API_KEY
 
-
 # Create your views here.
 def index(request):
     try:
