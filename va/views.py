@@ -83,7 +83,7 @@ def index(request):
             request.session.modified = True
             # call the OpenAI API
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-16k",
+                model="gpt-3.5-turbo",
                 messages=request.session['prompts'],
                 temperature=temperature,
                 max_tokens=1000,
