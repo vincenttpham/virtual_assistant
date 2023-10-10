@@ -202,7 +202,7 @@ def send_email(email_address, subject, body):
         email.send(fail_silently=False)
     except Exception as e:
         print(e)
-    success = f"Email sent successfully.\n\nTo: {email_address}\nSubject: {subject}\n\n\n{body}"
+    success = f"Email has been sent successfully.\n\nTo: {email_address}\nSubject: {subject}\n\n\n{body}"
     return success
 
 """

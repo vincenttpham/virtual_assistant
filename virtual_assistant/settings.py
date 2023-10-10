@@ -33,7 +33,7 @@ EMAIL_USE_SSL = False
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['37h305jn8k.execute-api.us-east-1.amazonaws.com', 'localhost']
+ALLOWED_HOSTS = ['37h305jn8k.execute-api.us-east-1.amazonaws.com']
 
 
 # Application definition
