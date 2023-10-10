@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.sessions.models import Session
 from django.core.mail import EmailMessage
 from django.conf import settings
 import json
@@ -100,18 +99,21 @@ def index(request):
             functions = [
                 {
                     "name": "send_email",
-                    "description": "Sends an email to the specified email address",
+                    "description": "Send an email to the specified email addresses",
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "email_address": {
-                                "type": "string",
-                                "description": "An email address to send the email to",
+                            "emails": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                },
+                                "description": "Email addresses to send the email to",
                             },
                             "body": {"type": "string"},
                             "subject": {"type": "string"},
                         },
-                        "required": ["email_address"],
+                        "required": ["emails"],
                     },
                 },
             ]
@@ -136,7 +138,7 @@ def index(request):
                 function_to_call = available_functions[function_name]
                 function_args = json.loads(response_message["function_call"]["arguments"])
                 function_response = function_to_call(
-                    email_address=function_args.get("email_address"),
+                    emails=function_args.get("emails"),
                     body=function_args.get("body"),
                     subject=function_args.get("subject"),
                 )
@@ -189,20 +191,20 @@ def index(request):
             }
         return render(request, 'index.html', context)
 
-def send_email(email_address, subject, body):
+def send_email(emails, subject, body):
     try:
         email = EmailMessage(
             subject,
             body,
             f'Vincent <{settings.EMAIL_HOST_USER}>',
-            [email_address],
+            emails,
             reply_to=[settings.EMAIL_HOST_USER],
             headers={'Message-ID': 'foo'},
         )
         email.send(fail_silently=False)
     except Exception as e:
         print(e)
-    success = f"Email has been sent successfully.\n\nTo: {email_address}\nSubject: {subject}\n\n\n{body}"
+    success = f"Email has been sent successfully.\nTo: {emails}\nSubject: {subject}\n\n\n{body}"
     return success
 
 """
