@@ -146,14 +146,14 @@
 
                     <ul class="px-3 pt-1">
                       {% for message in messages %}
-                      {% if message.role == 'assistant' %}
-                      <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
-                        <p class="me-5">{{ message.content|linebreaksbr }}</p>
-                        <span class="time">{{ message.time }}</span>
-                      </li>
-                      {% elif message.role == 'user' %}
+                      {% if message.role == 'user' %}
                       <li class="reply mt-2">
                         <p class="ms-5">{{ message.content|linebreaksbr }}</p>
+                        <span class="time">{{ message.time }}</span>
+                      </li>
+                      {% else %}
+                      <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
+                        <p class="me-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
                       {% endif %}
@@ -177,17 +177,13 @@
 
                 <div class="send-box">
 
-                  <form action="/dev" method="POST" enctype="multipart/form-data" class="d-block">
+                  <form action="/" method="POST" enctype="multipart/form-data" class="d-block">
                     {% csrf_token %}
 
                     <div class="row">
 
                       <div class="mb-2">
                         <input type="text" name="prompt" class="form-control w-100" aria-label="message…" placeholder="Write message…" id="prompt" tabindex="1">
-                      </div>
-
-                      <div class="mb-2">
-                        <input class="form-control w-100" type="hidden" step="0.01" min="0" max="2" name="temperature" value="{{ temperature }}" id="temperature">
                       </div>
 
                     </div>

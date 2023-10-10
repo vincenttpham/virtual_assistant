@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib.sessions.models import Session
+from django.core.mail import EmailMessage
+from django.conf import settings
+import json
 import openai
 from .secret_key import API_KEY
 openai.api_key = API_KEY
@@ -13,9 +17,7 @@ def index(request):
             ]
         # messages will be used for display on the chatbox
         if 'prompts' not in request.session:
-            request.session['prompts'] = [
-                {"role": "system", "content": ""},
-            ]
+            request.session['prompts'] = []
         # prompts will be used for chat completions
 
         # this is because if a file is uploaded with a prompt, the below logic will parse through the data and format it into the prompt
@@ -29,6 +31,15 @@ def index(request):
             # set persistent chatbox for mobile screens
             request.session['chatbox'] = 'showbox'
             if 'upload' in request.FILES:
+                # if no prompt
+                if prompt == '':
+                    request.session['messages'].append({"role": "assistant", "content": "If you send me a file without instructions on what to do with it, how am I supposed to help you?"})
+                    request.session.modified = True
+                    context = {
+                        'messages': request.session['messages'],
+                        'showbox': request.session['chatbox'],
+                    }
+                    return render(request, 'index.html', context)
                 upload = request.FILES['upload']
                 # app user will see the file name instead of its data
                 request.session['messages'].append({"role": "user", "content": upload.name})
@@ -39,7 +50,6 @@ def index(request):
                     request.session.modified = True
                     context = {
                         'messages': request.session['messages'],
-                        'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
@@ -49,10 +59,20 @@ def index(request):
                     request.session.modified = True
                     context = {
                         'messages': request.session['messages'],
-                        'temperature': 0,
                         'showbox': request.session['chatbox'],
                     }
                     return render(request, 'index.html', context)
+                
+                # add file data to session
+                """
+                request.session['upload'] = []
+                reader = csv.DictReader(upload.read().decode('unicode_escape').splitlines(), delimiter=',')
+                for row in reader:
+                    request.session['upload'].append(row)
+                    request.session.modified = True
+                """
+                # testing purposes only
+                # request.session['messages'].append({"role": "user", "content": str(request.session['upload'])})
 
                 file_data = upload.read().decode("unicode_escape")
 
@@ -60,46 +80,97 @@ def index(request):
                 next(iter(lines))
 
                 # loop over the lines and add them to prompt
-                prompt += "\n"
                 upload_content = ""
                 for line in lines:
                     upload_content += str(f"{line}")
-                    """
                     fields = line.split(",")
                     for field in fields:
                         upload_content += str(f"{field}")
-                    upload_content += "\n"
-                    """
-                prompt += f"###\n{upload_content}\n###"
-
-            # if temperature is used, get the temperature from the form
-            # I decided to remove adjustable temerature from the template for simplicity
-            temperature = float(request.POST.get('temperature', 0.1))
+                prompt += f"###{upload_content}###"
+            
             # append the prompt to the messages list
             request.session['messages'].append({"role": "user", "content": message})
             request.session.modified = True
             request.session['prompts'].append({"role": "user", "content": prompt})
             # set the session as modified
             request.session.modified = True
-            # call the OpenAI API
+
+            # s_key = request.session.session_key
+
+            functions = [
+                {
+                    "name": "send_email",
+                    "description": "Sends an email to the specified email address",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "email_address": {
+                                "type": "string",
+                                "description": "An email address to send the email to",
+                            },
+                            "body": {"type": "string"},
+                            "subject": {"type": "string"},
+                        },
+                        "required": ["email_address"],
+                    },
+                },
+            ]
+
+            # Step 1: send the conversation and available functions to GPT
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=request.session['prompts'],
-                temperature=temperature,
-                max_tokens=1000,
+                functions=functions,
+                function_call="auto",
             )
-            # format the response
-            formatted_response = response['choices'][0]['message']['content']
+            response_message = response['choices'][0]['message']
+
+            # Step 2: check if GPT wanted to call a function
+            if response_message.get("function_call"):
+                # Step 3: call the function
+                # Note: the JSON response may not always be valid; be sure to handle errors
+                available_functions = {
+                    "send_email": send_email,
+                }  # only one function in this example, but you can have multiple
+                function_name = response_message["function_call"]["name"]
+                function_to_call = available_functions[function_name]
+                function_args = json.loads(response_message["function_call"]["arguments"])
+                function_response = function_to_call(
+                    email_address=function_args.get("email_address"),
+                    body=function_args.get("body"),
+                    subject=function_args.get("subject"),
+                )
+                request.session['messages'].append(
+                    {
+                        "role": "function",
+                        "name": function_name,
+                        "content": function_response,
+                    }
+                )
+                request.session.modified = True
+                request.session['prompts'].append(
+                    {
+                        "role": "function",
+                        "name": function_name,
+                        "content": function_response,
+                    }
+                )
+                request.session.modified = True
+                context = {
+                    'messages': request.session['messages'],
+                    'showbox': request.session['chatbox'],
+                }
+                return render(request, 'index.html', context)
+
             # append the response to the messages list
-            request.session['messages'].append({"role": "assistant", "content": formatted_response})
+            request.session['messages'].append(response_message)
             request.session.modified = True
             # append the response to the prompts list
-            request.session['prompts'].append({"role": "assistant", "content": formatted_response})
+            request.session['prompts'].append(response_message)
             request.session.modified = True
             # redirect to the home page with new messages displayed
             context = {
                 'messages': request.session['messages'],
-                'temperature': temperature,
                 'showbox': request.session['chatbox'],
             }
             return render(request, 'index.html', context)
@@ -107,7 +178,6 @@ def index(request):
             # if the request is not a POST request, render the home page
             context = {
                 'messages': request.session['messages'],
-                'temperature': 0,
             }
             return render(request, 'index.html', context)
     except Exception as e:
@@ -116,13 +186,52 @@ def index(request):
         # if there is an error, return error message
         context = {
                 'messages': request.session['messages'],
-                'temperature': 0,
             }
         return render(request, 'index.html', context)
+
+def send_email(email_address, subject, body):
+    try:
+        email = EmailMessage(
+            subject,
+            body,
+            f'Vincent <{settings.EMAIL_HOST_USER}>',
+            [email_address],
+            reply_to=[settings.EMAIL_HOST_USER],
+            headers={'Message-ID': 'foo'},
+        )
+        email.send(fail_silently=False)
+    except Exception as e:
+        print(e)
+    success = f"Email sent successfully.\n\nTo: {email_address}\nSubject: {subject}\n\n\n{body}"
+    return success
+
+"""
+def personalized_email_outreach(s_key, message):
+    s = Session.objects.get(pk=s_key)
+    s_data = s.get_decoded()
+    upload_data = []
+    if 'upload' in s_data:
+        upload_data = s_data['upload']
+    for record in upload_data:
+        prompt = message + "\n"
+        prompt += f"###\n{record}\n###"
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+        )
+        response_message = response['choices'][0]['message']
+        print(response_message)
+
+    success = {
+        "body": "Emails sent successfully",
+    }
+    return json.dumps(success)
+"""
 
 def new_chat(request):
     # clear the messages list
     request.session.pop('messages', None)
     request.session.pop('prompts', None)
+    request.session.pop('upload', None)
     request.session.pop('chatbox', None)
     return redirect('index')
