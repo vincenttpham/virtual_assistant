@@ -8,21 +8,29 @@ openai.api_key = API_KEY
 
 # Create your views here.
 def index(request):
+    # if the session does not have a messages key, create one
+    if 'messages' not in request.session:
+        request.session['messages'] = [
+            {"role": "assistant", "content": "Hi, how can I help you?"},
+        ]
+    # messages will be used for display on the chatbox
+    if 'prompts' not in request.session:
+        request.session['prompts'] = []
+    # prompts will be used for chat completions
+
+    # by keeping 2 separate logs, I can put custom responses into the message view while keeping the token count low
+
+    # set persistent chatbox for mobile screens
+    if 'chatbox' not in request.session:
+        request.session['chatbox'] = ''
+    context = {
+            'messages': request.session['messages'],
+            'showbox': request.session['chatbox'],
+        }
+    return render(request, 'index.html', context)
+
+def send_prompt(request):
     try:
-        # if the session does not have a messages key, create one
-        if 'messages' not in request.session:
-            request.session['messages'] = [
-                {"role": "assistant", "content": "Hi, how can I help you?"},
-            ]
-        # messages will be used for display on the chatbox
-        if 'prompts' not in request.session:
-            request.session['prompts'] = []
-        # prompts will be used for chat completions
-
-        # this is because if a file is uploaded with a prompt, the below logic will parse through the data and format it into the prompt
-
-        # by keeping 2 separate logs, this keeps the app user from seeing uploaded file data on their chatbox
-
         if request.method == 'POST':
             # get the prompt from the form
             prompt = request.POST.get('prompt')
@@ -34,11 +42,7 @@ def index(request):
                 if prompt == '':
                     request.session['messages'].append({"role": "assistant", "content": "If you send me a file without instructions on what to do with it, how am I supposed to help you?"})
                     request.session.modified = True
-                    context = {
-                        'messages': request.session['messages'],
-                        'showbox': request.session['chatbox'],
-                    }
-                    return render(request, 'index.html', context)
+                    return redirect('index')
                 upload = request.FILES['upload']
                 # app user will see the file name instead of its data
                 request.session['messages'].append({"role": "user", "content": upload.name})
@@ -47,20 +51,12 @@ def index(request):
                 if not upload.name.endswith('.csv'):
                     request.session['messages'].append({"role": "assistant", "content": "Sorry, I'm only programmed to read CSV files at the moment. Try sending me a CSV file and I'll try my best to assist you."})
                     request.session.modified = True
-                    context = {
-                        'messages': request.session['messages'],
-                        'showbox': request.session['chatbox'],
-                    }
-                    return render(request, 'index.html', context)
+                    return redirect('index')
                 #if file is too large, return
                 if upload.multiple_chunks():
                     request.session['messages'].append({"role": "assistant", "content": "The uploaded file is too big (%.2f MB)."})
                     request.session.modified = True
-                    context = {
-                        'messages': request.session['messages'],
-                        'showbox': request.session['chatbox'],
-                    }
-                    return render(request, 'index.html', context)
+                    return redirect('index')
                 
                 # add file data to session
                 """
@@ -99,21 +95,21 @@ def index(request):
             functions = [
                 {
                     "name": "send_email",
-                    "description": "Send an email to the specified email addresses",
+                    "description": "Sends an email to the specified recipients",
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "emails": {
+                            "recipients": {
                                 "type": "array",
                                 "items": {
                                     "type": "string",
                                 },
                                 "description": "Email addresses to send the email to",
                             },
-                            "body": {"type": "string"},
                             "subject": {"type": "string"},
+                            "body": {"type": "string"},
                         },
-                        "required": ["emails"],
+                        "required": ["recipients"],
                     },
                 },
                 {
@@ -148,9 +144,9 @@ def index(request):
                 function_args = json.loads(response_message["function_call"]["arguments"])
                 if function_name == "send_email":
                     function_response = function_to_call(
-                        emails=function_args.get("emails"),
-                        body=function_args.get("body"),
+                        recipients=function_args.get("recipients"),
                         subject=function_args.get("subject"),
+                        body=function_args.get("body"),
                     )
                 if function_name == "generate_image":
                     function_response = function_to_call(
@@ -172,11 +168,7 @@ def index(request):
                     }
                 )
                 request.session.modified = True
-                context = {
-                    'messages': request.session['messages'],
-                    'showbox': request.session['chatbox'],
-                }
-                return render(request, 'index.html', context)
+                return redirect('index')
 
             # append the response to the messages list
             request.session['messages'].append(response_message)
@@ -185,41 +177,32 @@ def index(request):
             request.session['prompts'].append(response_message)
             request.session.modified = True
             # redirect to the home page with new messages displayed
-            context = {
-                'messages': request.session['messages'],
-                'showbox': request.session['chatbox'],
-            }
-            return render(request, 'index.html', context)
+            return redirect('index')
+        
         else:
-            # if the request is not a POST request, render the home page
-            context = {
-                'messages': request.session['messages'],
-            }
-            return render(request, 'index.html', context)
+            # if the request is not a POST request, return the home page
+            return redirect('index')
+        
     except Exception as e:
-        print(e)
-        request.session['messages'].append({"role": "assistant", "content": str(e)})
         # if there is an error, return error message
-        context = {
-                'messages': request.session['messages'],
-            }
-        return render(request, 'index.html', context)
+        request.session['messages'].append({"role": "assistant", "content": str(e)})
+        return redirect('index')
 
-def send_email(emails, subject, body):
+def send_email(recipients, subject, body):
     try:
         email = EmailMessage(
             subject,
             body,
             f'Vincent <{settings.EMAIL_HOST_USER}>',
-            emails,
+            recipients,
             reply_to=[settings.EMAIL_HOST_USER],
             headers={'Message-ID': 'foo'},
         )
         email.send(fail_silently=False)
+        success = f"Email has been sent successfully.\n\nTo: {recipients}\nSubject: {subject}\nBody:\n\n{body}"
+        return success
     except Exception as e:
-        print(e)
-    success = f"Email has been sent successfully.\n\nTo: {emails}\nSubject: {subject}\nBody:\n\n{body}"
-    return success
+        return e
 
 def generate_image(prompt):
     response = openai.Image.create(
