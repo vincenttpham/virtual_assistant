@@ -149,7 +149,7 @@
                       {% if message.role == 'user' %}
                       <li class="reply mt-2">
                         <p class="ms-5">{{ message.content|linebreaksbr }}</p>
-                        <span class="time">{{ message.time }}</span>
+                        <span class="time"></span>
                       </li>
                       {% elif message.name == 'generate_image' %}
                       <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
@@ -158,12 +158,12 @@
                             <img src="{{ message.content }}" alt="Generated image">
                           </a>
                         </p>
-                        <span class="time">{{ message.time }}</span>
+                        <span class="time"></span>
                       </li>
                       {% else %}
                       <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
                         <p class="me-5">{{ message.content|linebreaksbr }}</p>
-                        <span class="time">{{ message.time }}</span>
+                        <span class="time"></span>
                       </li>
                       {% endif %}
                       {% endfor %}

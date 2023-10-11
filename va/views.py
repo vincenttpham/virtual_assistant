@@ -111,6 +111,10 @@ def send_prompt(request):
                 },
             ]
 
+            # append the prompt to the messages list
+            request.session['messages'].append({"role": "user", "content": message})
+            request.session['prompts'].append({"role": "user", "content": prompt})
+
             # Step 1: send the conversation and available functions to GPT
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -158,9 +162,6 @@ def send_prompt(request):
                 request.session.modified = True
                 return redirect('index')
             
-            # append the prompt to the messages list
-            request.session['messages'].append({"role": "user", "content": message})
-            request.session['prompts'].append({"role": "user", "content": prompt})
             # append the response to the messages list
             request.session['messages'].append(response_message)
             request.session['prompts'].append(response_message)
