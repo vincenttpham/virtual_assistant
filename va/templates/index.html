@@ -152,10 +152,21 @@
                         <span class="time">{{ message.time }}</span>
                       </li>
                       {% else %}
+                      {% if message.name == 'generate_image' %}
+                      <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
+                        <p class="me-5">
+                          <a href="{{ message.content }}" data-toggle="lightbox" data-gallery="gallery">
+                            <img class="img-fluid" src="{{ message.content }}" alt="Generated image">
+                          </a>
+                        </p>
+                        <span class="time">{{ message.time }}</span>
+                      </li>
+                      {% else %}
                       <li class="sender mt-2 {% if forloop.last %}d-none{% endif %}">
                         <p class="me-5">{{ message.content|linebreaksbr }}</p>
                         <span class="time">{{ message.time }}</span>
                       </li>
+                      {% endif %}
                       {% endif %}
                       {% endfor %}
                       <li class="reply mt-2 d-none" id="reply">

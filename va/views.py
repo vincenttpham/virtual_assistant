@@ -116,6 +116,14 @@ def index(request):
                         "required": ["emails"],
                     },
                 },
+                {
+                    "name": "generate_image",
+                    "description": "Generates an image based on the prompt",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {},
+                    },
+                },
             ]
 
             # Step 1: send the conversation and available functions to GPT
@@ -133,15 +141,21 @@ def index(request):
                 # Note: the JSON response may not always be valid; be sure to handle errors
                 available_functions = {
                     "send_email": send_email,
-                }  # only one function in this example, but you can have multiple
+                    "generate_image": generate_image,
+                }
                 function_name = response_message["function_call"]["name"]
                 function_to_call = available_functions[function_name]
                 function_args = json.loads(response_message["function_call"]["arguments"])
-                function_response = function_to_call(
-                    emails=function_args.get("emails"),
-                    body=function_args.get("body"),
-                    subject=function_args.get("subject"),
-                )
+                if function_name == "send_email":
+                    function_response = function_to_call(
+                        emails=function_args.get("emails"),
+                        body=function_args.get("body"),
+                        subject=function_args.get("subject"),
+                    )
+                if function_name == "generate_image":
+                    function_response = function_to_call(
+                        prompt=prompt,
+                    )
                 request.session['messages'].append(
                     {
                         "role": "function",
@@ -206,6 +220,15 @@ def send_email(emails, subject, body):
         print(e)
     success = f"Email has been sent successfully.\nTo: {emails}\nSubject: {subject}\n\n\n{body}"
     return success
+
+def generate_image(prompt):
+    response = openai.Image.create(
+        prompt=prompt,
+        n=1,
+        size="256x256"
+    )
+    image_url = response['data'][0]['url']
+    return image_url
 
 """
 def personalized_email_outreach(s_key, message):
