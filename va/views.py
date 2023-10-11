@@ -14,17 +14,20 @@ def index(request):
         request.session['messages'] = [
             {"role": "assistant", "content": "Hi, how can I help you?"},
         ]
+    messages = request.session['messages']
     # prompts will be used for chat completions
     if 'prompts' not in request.session:
         request.session['prompts'] = []
+    prompts = request.session['prompts']
     # by keeping 2 separate logs, I can put custom responses into the message view while keeping the token count low
 
     # set persistent chatbox for mobile screens
     if 'chatbox' not in request.session:
         request.session['chatbox'] = ''
+    chatbox = request.session['chatbox']
     context = {
-            'messages': request.session['messages'],
-            'showbox': request.session['chatbox'],
+            'messages': messages,
+            'showbox': chatbox,
         }
     return render(request, 'index.html', context)
 
