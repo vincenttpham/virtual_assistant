@@ -85,10 +85,7 @@ def send_prompt(request):
             
             # append the prompt to the messages list
             request.session['messages'].append({"role": "user", "content": message})
-            request.session.modified = True
             request.session['prompts'].append({"role": "user", "content": prompt})
-            # set the session as modified
-            request.session.modified = True
 
             # s_key = request.session.session_key
 
@@ -159,7 +156,6 @@ def send_prompt(request):
                         "content": function_response,
                     }
                 )
-                request.session.modified = True
                 request.session['prompts'].append(
                     {
                         "role": "function",
@@ -172,11 +168,9 @@ def send_prompt(request):
 
             # append the response to the messages list
             request.session['messages'].append(response_message)
-            request.session.modified = True
             # append the response to the prompts list
             request.session['prompts'].append(response_message)
             request.session.modified = True
-            # redirect to the home page with new messages displayed
             return redirect('index')
         
         else:
@@ -186,6 +180,7 @@ def send_prompt(request):
     except Exception as e:
         # if there is an error, return error message
         request.session['messages'].append({"role": "assistant", "content": str(e)})
+        request.session.modified = True
         return redirect('index')
 
 def send_email(recipients, subject, body):
