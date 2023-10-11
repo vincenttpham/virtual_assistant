@@ -218,7 +218,7 @@ def send_email(emails, subject, body):
         email.send(fail_silently=False)
     except Exception as e:
         print(e)
-    success = f"Email has been sent successfully.\nTo: {emails}\nSubject: {subject}\n\n\n{body}"
+    success = f"Email has been sent successfully.\n\nTo: {emails}\nSubject: {subject}\n\n\n\n{body}"
     return success
 
 def generate_image(prompt):
