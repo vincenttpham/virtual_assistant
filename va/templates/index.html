@@ -148,7 +148,7 @@
                       {% for message in messages %}
                       {% if message.role == 'user' %}
                       <li class="reply mt-2">
-                        <p class="ms-5">{{ message.content|linebreaksbr }}</p>
+                        <p class="ms-5 text-start">{{ message.content|linebreaksbr }}</p>
                         <span class="time"></span>
                       </li>
                       {% elif message.name == 'generate_image' %}
@@ -168,7 +168,7 @@
                       {% endif %}
                       {% endfor %}
                       <li class="reply mt-2 d-none" id="reply">
-                        <p class="ms-5"></p>
+                        <p class="ms-5 text-start"></p>
                         <span class="time mt-2 me-1">Delivered</span>
                       </li>
                       <li class="typing mt-2 pb-3 d-none">
