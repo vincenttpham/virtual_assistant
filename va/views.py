@@ -9,15 +9,14 @@ openai.api_key = API_KEY
 # Create your views here.
 def index(request):
     # if the session does not have a messages key, create one
+    # messages will be used for display on the chatbox
     if 'messages' not in request.session:
         request.session['messages'] = [
             {"role": "assistant", "content": "Hi, how can I help you?"},
         ]
-    # messages will be used for display on the chatbox
+    # prompts will be used for chat completions
     if 'prompts' not in request.session:
         request.session['prompts'] = []
-    # prompts will be used for chat completions
-
     # by keeping 2 separate logs, I can put custom responses into the message view while keeping the token count low
 
     # set persistent chatbox for mobile screens
@@ -38,15 +37,15 @@ def send_prompt(request):
             # set persistent chatbox for mobile screens
             request.session['chatbox'] = 'showbox'
             if 'upload' in request.FILES:
+                upload = request.FILES['upload']
+                # user will see file name to confirm successful upload
+                request.session['messages'].append({"role": "user", "content": upload.name})
+                request.session.modified = True
                 # if no prompt
                 if prompt == '':
                     request.session['messages'].append({"role": "assistant", "content": "If you send me a file without instructions on what to do with it, how am I supposed to help you?"})
                     request.session.modified = True
                     return redirect('index')
-                upload = request.FILES['upload']
-                # app user will see the file name instead of its data
-                request.session['messages'].append({"role": "user", "content": upload.name})
-                request.session.modified = True
                 # if uploaded file isnt csv, return message
                 if not upload.name.endswith('.csv'):
                     request.session['messages'].append({"role": "assistant", "content": "Sorry, I'm only programmed to read CSV files at the moment. Try sending me a CSV file and I'll try my best to assist you."})
@@ -57,23 +56,11 @@ def send_prompt(request):
                     request.session['messages'].append({"role": "assistant", "content": "The uploaded file is too big (%.2f MB)."})
                     request.session.modified = True
                     return redirect('index')
-                
+
                 # add file data to session
-                """
-                request.session['upload'] = []
-                reader = csv.DictReader(upload.read().decode('unicode_escape').splitlines(), delimiter=',')
-                for row in reader:
-                    request.session['upload'].append(row)
-                    request.session.modified = True
-                """
-                # testing purposes only
-                # request.session['messages'].append({"role": "user", "content": str(request.session['upload'])})
-
                 file_data = upload.read().decode("unicode_escape")
-
                 lines = file_data.split("\n")
                 next(iter(lines))
-
                 # loop over the lines and add them to prompt
                 upload_content = ""
                 for line in lines:
@@ -82,10 +69,15 @@ def send_prompt(request):
                     for field in fields:
                         upload_content += str(f"{field}")
                 prompt += f"###{upload_content}###"
-            
-            # append the prompt to the messages list
-            request.session['messages'].append({"role": "user", "content": message})
-            request.session['prompts'].append({"role": "user", "content": prompt})
+
+                # testing potential file reading in session for lower token count
+                """
+                request.session['upload'] = []
+                reader = csv.DictReader(upload.read().decode('unicode_escape').splitlines(), delimiter=',')
+                for row in reader:
+                    request.session['upload'].append(row)
+                    request.session.modified = True
+                """
 
             # s_key = request.session.session_key
 
@@ -165,10 +157,12 @@ def send_prompt(request):
                 )
                 request.session.modified = True
                 return redirect('index')
-
+            
+            # append the prompt to the messages list
+            request.session['messages'].append({"role": "user", "content": message})
+            request.session['prompts'].append({"role": "user", "content": prompt})
             # append the response to the messages list
             request.session['messages'].append(response_message)
-            # append the response to the prompts list
             request.session['prompts'].append(response_message)
             request.session.modified = True
             return redirect('index')
