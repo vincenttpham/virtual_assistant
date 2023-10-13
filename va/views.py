@@ -3,8 +3,8 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 import json
 import openai
-from .secret_key import API_KEY
-openai.api_key = API_KEY
+from .secret_key import OPENAI_API_KEY
+openai.api_key = OPENAI_API_KEY
 
 # Create your views here.
 def index(request):

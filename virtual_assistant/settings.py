@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from va import secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mr6zfr6y0&z(qpby7=b0z3o6rj1e6$n%24p8(2cbovxhq&s-m_'
+SECRET_KEY = secret_key.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -138,7 +139,7 @@ AWS_DEFAULT_ACL = None
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'vincenttpham@gmail.com'
-EMAIL_HOST_PASSWORD = 'bhfzoujezsoxtxuk'
+EMAIL_HOST_USER = secret_key.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = secret_key.EMAIL_HOST_PASSWORD
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
