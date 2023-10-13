@@ -138,7 +138,6 @@ def send_prompt(request):
                 messages=request.session['prompts'],
                 functions=functions,
                 function_call="auto",
-                request_timeout=29,
             )
             response_message = response['choices'][0]['message']
 
