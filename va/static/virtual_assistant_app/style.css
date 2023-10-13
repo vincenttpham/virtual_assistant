@@ -716,10 +716,6 @@ button:focus {
 .bounce {
     transform-origin: bottom;
     transform: scale(0);
-    -webkit-animation: expand-bounce 0.5s ease-in forwards;
-    -moz-animation: expand-bounce 0.5s ease-in forwards;
-    -ms-animation: expand-bounce 0.5s ease-in forwards;
-    -o-animation: expand-bounce 0.5s ease-in forwards;
     animation: expand-bounce 0.5s ease-in forwards;
 }
 
@@ -776,26 +772,14 @@ button:focus {
 }
 
 .dot1 {
-    -webkit-animation: dot1L 1s ease-in-out 0.5s infinite forwards;
-    -moz-animation: dot1L 1s ease-in-out 0.5s infinite forwards;
-    -ms-animation: dot1L 1s ease-in-out 0.5s infinite forwards;
-    -o-animation: dot1L 1s ease-in-out 0.5s infinite forwards;
     animation: dot1L 1s ease-in-out 0.5s infinite forwards;
 }
 
 .dot2 {
-    -webkit-animation: dot1L 1s ease-in-out 0.7s infinite forwards;
-    -moz-animation: dot1L 1s ease-in-out 0.7s infinite forwards;
-    -ms-animation: dot1L 1s ease-in-out 0.7s infinite forwards;
-    -o-animation: dot1L 1s ease-in-out 0.7s infinite forwards;
     animation: dot1L 1s ease-in-out 0.7s infinite forwards;
 }
 
 .dot3 {
-    -webkit-animation: dot1L 1s ease-in-out 1s infinite forwards;
-    -moz-animation: dot1L 1s ease-in-out 1s infinite forwards;
-    -ms-animation: dot1L 1s ease-in-out 1s infinite forwards;
-    -o-animation: dot1L 1s ease-in-out 1s infinite forwards;
     animation: dot1L 1s ease-in-out 1s infinite forwards;
 }
 
